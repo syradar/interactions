@@ -1,0 +1,186 @@
+.card-splitting {
+  --card-bg: hsl(250 25 98);
+  --card-border: hsl(250 12 93);
+  --card-icon: hsl(258 3 54);
+  --card-chevron: hsl(255 5 69);
+  --card-title: hsl(240 5 18);
+  --card-text: hsl(252 3 34);
+  --color-grey-95: oklch(93% 0 0);
+  --color-grey-97: oklch(98% 0 0);
+  --border: 2px solid var(--card-border);
+  --radii: 1rem;
+  --card-padding: 2px;
+  --radii-button: calc(var(--radii) - var(--card-padding));
+  --easing-overshoot: linear(
+    0,
+    0.409 7.1%,
+    0.717 14.6%,
+    0.935 22.7%,
+    1.014 27.1%,
+    1.071 31.7%,
+    1.121 39.2%,
+    1.131 43.4%,
+    1.13 47.9%,
+    1.112 55.9%,
+    1.02 81.1%,
+    1.004 89.9%,
+    1
+  );
+
+  --easing-overshoot-dramatic: linear(
+    0,
+    0.618 4.6%,
+    1.072 9.7%,
+    1.358 15.3%,
+    1.446 18.4%,
+    1.497 21.7%,
+    1.512 23.9%,
+    1.514 26.2%,
+    1.481 31.5%,
+    1.421 36.4%,
+    1.174 53.4%,
+    1.108 59.5%,
+    1.059 65.7%,
+    1.028 71.9%,
+    1.009 78.9%,
+    1
+  );
+
+  --animation-duration: 500ms;
+  width: 100%;
+  max-width: 375px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+
+  .card {
+    padding: var(--card-padding);
+    border-left: var(--border);
+    border-right: var(--border);
+    border-color: var(--color-grey-95);
+    transition: margin var(--animation-duration)
+      var(--easing-overshoot-dramatic), border-radius var(--animation-duration)
+      var(--easing-overshoot), border var(--animation-duration) ease-in-out,
+      box-shadow var(--animation-duration) ease-in-out;
+
+    &:first-of-type {
+      border-block-start: var(--border);
+      border-top-left-radius: var(--radii);
+      border-top-right-radius: var(--radii);
+    }
+
+    &:last-of-type {
+      border-block-end: var(--border);
+      border-bottom-left-radius: var(--radii);
+      border-bottom-right-radius: var(--radii);
+    }
+
+    > summary {
+      padding: 1rem;
+      cursor: pointer;
+    }
+
+    > div {
+      display: grid;
+      transition: grid-template-rows var(--animation-duration)
+        var(--easing-overshoot);
+      grid-template-rows: 0fr;
+
+      > div {
+        overflow: hidden;
+
+        > div {
+          transition: translate var(--animation-duration) 100ms
+            var(--easing-overshoot), opacity var(--animation-duration)
+            var(--easing-overshoot);
+          translate: 0 -2rem;
+          opacity: 0;
+          color: var(--card-text);
+          padding-inline: 0.75rem;
+          padding-block-end: 0.75rem;
+        }
+      }
+    }
+    > button {
+      width: 100%;
+      display: flex;
+      background: none;
+      border: none;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.75rem;
+      transition: background var(--animation-duration) ease-out;
+      border-radius: var(--radii-button);
+
+      &:hover {
+        background: var(--color-grey-97);
+      }
+
+      span {
+        pointer-events: none;
+        font-weight: 500;
+        font-size: 1.1rem;
+        color: var(--card-title);
+      }
+
+      svg {
+        --size: 1.5em;
+        pointer-events: none;
+        aspect-ratio: 1;
+        width: var(--size);
+        height: var(--size);
+        stroke: var(--card-icon);
+      }
+
+      .chevron {
+        stroke: var(--card-chevron);
+        margin-left: auto;
+        rotate: -180deg;
+        transition: rotate var(--animation-duration) var(--easing-overshoot);
+      }
+    }
+
+    > button[aria-expanded="true"] {
+      > .chevron {
+        rotate: 0deg;
+      }
+
+      + div {
+        grid-template-rows: 1fr;
+        > div {
+          > div {
+            translate: 0 0;
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    &:has(button[aria-expanded="true"]) {
+      margin-block: 1rem;
+      border-block: var(--border);
+      border-radius: var(--radii);
+      background: var(--card-bg);
+
+      &:first-of-type {
+        margin-block-start: 0;
+      }
+
+      &:last-of-type {
+        margin-block-end: 0;
+      }
+    }
+  }
+
+  .card:has(+ .card > button[aria-expanded="true"]) {
+    border-block-end: var(--border);
+    border-bottom-left-radius: var(--radii);
+    border-bottom-right-radius: var(--radii);
+  }
+
+  .card:has(button[aria-expanded="true"]) + .card {
+    border-block-start: var(--border);
+    border-top-left-radius: var(--radii);
+    border-top-right-radius: var(--radii);
+  }
+}
